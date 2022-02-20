@@ -45,7 +45,8 @@ done
 
 # Calculate build command
 echo $BUILD_DIR
-echo $(pwd)
+echo $(ls)
+echo $(ls BUILD_DIR)
 if [ -x $BUILD_DIR/bin/build ]; then
     echo "       Found bin/build"
     BUILD_COMMAND=bin/build
