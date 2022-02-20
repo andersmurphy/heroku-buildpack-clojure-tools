@@ -43,16 +43,7 @@ for DIR in $CACHED_DIRS; do
   fi
 done
 
-# Calculate build command
-if [ "$BUILD_COMMAND" = "" ]; then
-    if [ -x $BUILD_DIR/bin/build ]; then
-        echo "       Found bin/build"
-        BUILD_COMMAND=bin/build
-    else
-        echo " !     Missing bin/build"
-        exit 1
-    fi
-fi
+BUILD_COMMAND=bin/build
 
 echo "       Running: $BUILD_COMMAND"
 
