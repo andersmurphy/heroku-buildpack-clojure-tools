@@ -52,7 +52,7 @@ if [ "$BUILD_COMMAND" = "" ]; then
         BUILD_COMMAND=bin/build
     else
         echo " !     Missing bin/build"
-        echo " !     Or bin/build is not be executable"
+        echo " !     Or bin/build is not executable"
         exit 1
     fi
 fi
