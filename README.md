@@ -1,6 +1,6 @@
 # Heroku buildpack for clojure tools
 
-Minimal buildpack for clojure [tools.deps](https://clojure.org/guides/deps_and_cli) and [tools.build](https://clojure.org/guides/tools_build) projects. Based off the [official heroku clojure build pack](https://github.com/heroku/heroku-buildpack-clojure).
+Minimal unofficial buildpack for clojure [tools.deps](https://clojure.org/guides/deps_and_cli) and [tools.build](https://clojure.org/guides/tools_build) projects. Based off the [official heroku clojure build pack](https://github.com/heroku/heroku-buildpack-clojure).
 
 ## To use this build pack
 
