@@ -24,7 +24,7 @@ export_env $ENV_DIR "." "JAVA_OPTS"
 install_jdk ${BUILD_DIR}
 
 # Run clojure install script
-CLOJURE_CLI_VERSION="${CLOJURE_CLI_VERSION:-1.10.0.411}"
+CLOJURE_CLI_VERSION="${CLOJURE_CLI_VERSION:-1.11.0-rc1}"
 echo "-----> Installing Clojure $CLOJURE_CLI_VERSION CLI tools"
 CLOJURE_INSTALL_NAME="linux-install-${CLOJURE_CLI_VERSION}.sh"
 CLOJURE_INSTALL_URL="https://download.clojure.org/install/$CLOJURE_INSTALL_NAME"
