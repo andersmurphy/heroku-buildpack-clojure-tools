@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# bin/use <build-dir>
+
+if [ -f $1/deps.edn ]; then
+  echo "Clojure (tools deps)"
+  exit 0
+else
+  (>&2 echo "Could not find a 'deps.edn' file! Please ensure it exists.")
+  exit 1
+fi

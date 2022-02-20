@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+BPLOG_PREFIX="buildpack.clojure-tools"
+
+# parse args
+export BUILD_DIR=$1
+export CACHE_DIR=$2
+export ENV_DIR=$3
+
+BP_DIR=$(cd $(dirname $0)/..; pwd)
+BIN_DIR=$BP_DIR/bin
+LIB_DIR=$BP_DIR/lib
+
+source $LIB_DIR/common.sh
+source <(curl --retry 3 -fsSL $BUILDPACK_STDLIB_URL)
+
+export_env $ENV_DIR "." "JAVA_OPTS"
+
+# Install JDK from jvm-common
+install_jdk ${BUILD_DIR}
+
+# Run clojure install script
+CLOJURE_CLI_VERSION="${CLOJURE_CLI_VERSION:-1.10.0.411}"
+echo "-----> Installing Clojure $CLOJURE_CLI_VERSION CLI tools"
+CLOJURE_INSTALL_NAME="linux-install-${CLOJURE_CLI_VERSION}.sh"
+CLOJURE_INSTALL_URL="https://download.clojure.org/install/$CLOJURE_INSTALL_NAME"
+curl --retry 3 -sfL --max-time 60 -o "/tmp/$CLOJURE_INSTALL_NAME" "$CLOJURE_INSTALL_URL"
+chmod +x /tmp/$CLOJURE_INSTALL_NAME
+mkdir -p $BUILD_DIR/.heroku/clj
+"/tmp/$CLOJURE_INSTALL_NAME" --prefix $BUILD_DIR/.heroku/clj 2>/dev/null | sed -u 's/^/       /'
+chmod +x $BUILD_DIR/.heroku/clj/bin/*
+export PATH=$BUILD_DIR/.heroku/clj/bin:$PATH
+
+# unpack existing cache
+CACHED_DIRS=".m2 node_modules"
+for DIR in $CACHED_DIRS; do
+  if [ ! -d $BUILD_DIR/$DIR ]; then
+    cache_copy $DIR $CACHE_DIR $BUILD_DIR
+  fi
+done
+
+# Calculate build command
+if [ -x $BUILD_DIR/bin/build ]; then
+    echo "       Found bin/build"
+    BUILD_COMMAND=bin/build
+else
+    echo " !     Missing bin/build."
+    exit 1
+fi
+
+echo "       Running: $BUILD_COMMAND"
+
+cd $BUILD_DIR
+$BUILD_COMMAND 2>&1 | sed -u 's/^/       /'
+
+if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+  echo " !     Failed to build."
+  exit 1
+fi
+
+# rewrite Clojure CLI path
+mv $BUILD_DIR/.heroku/clj/bin/clojure $BUILD_DIR/.heroku/clj/bin/clojure.old
+cat $BUILD_DIR/.heroku/clj/bin/clojure.old | sed -e "s/\/tmp\/$(basename $BUILD_DIR)/\/app/g" > $BUILD_DIR/.heroku/clj/bin/clojure
+chmod +x $BUILD_DIR/.heroku/clj/bin/clojure
+
+# repack cache with new assets
+mkdir -p $CACHE_DIR
+for DIR in $CACHED_DIRS; do
+  cache_copy $DIR $BUILD_DIR $CACHE_DIR
+done

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# bin/release <build-dir>
+
+export BUILD_DIR=$1
+
+BP_DIR=$(cd $(dirname $0)/..; pwd)
+BIN_DIR=$BP_DIR/bin
+LIB_DIR=$BP_DIR/lib
+
+source $LIB_DIR/common.sh
+
+if [ ! -f $BUILD_DIR/Procfile ]; then
+  cat <<EOF
+---
+config_vars:
+default_process_types:
+EOF
+else
+  echo " !     Missing Procfile."
+  exit 1
+fi
