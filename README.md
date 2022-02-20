@@ -4,7 +4,7 @@ Minimal buildpack for clojure tools.deps and tools.build projects. Based off the
 
 ## To use this build pack
 
-Set your heroku app to use this build pack.
+Set your heroku app to use this build pack:
 
 ```
 heroku buildpacks:set https://github.com/andersmurphy/heroku-buildpack-clojure-tools.git -a my-app
