@@ -18,7 +18,7 @@ A `Procfile` file:
 web: java -jar target/my-app.jar -m my-app.app
 ```
 
-A `bin/build` file:
+A `bin/build` file (make this file executable with `chmod +x bin/build`):
 
 ```
 clojure -T:build uber

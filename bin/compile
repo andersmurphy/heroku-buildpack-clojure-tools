@@ -45,6 +45,18 @@ done
 
 BUILD_COMMAND=bin/build
 
+# Calculate build command
+if [ "$BUILD_COMMAND" = "" ]; then
+    if [ -x $BUILD_DIR/bin/build ]; then
+        echo "       Found bin/build"
+        BUILD_COMMAND=bin/build
+    else
+        echo " !     Missing bin/build"
+        echo " !     Or bin/build is not be executable"
+        exit 1
+    fi
+fi
+
 echo "       Running: $BUILD_COMMAND"
 
 cd $BUILD_DIR
