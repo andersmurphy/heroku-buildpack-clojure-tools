@@ -38,10 +38,22 @@ export PATH=$BUILD_DIR/.heroku/clj/bin:$PATH
 # unpack existing cache
 CACHED_DIRS=".m2 node_modules"
 for DIR in $CACHED_DIRS; do
-  if [ ! -d $BUILD_DIR/$DIR ]; then
-    cache_copy $DIR $CACHE_DIR $BUILD_DIR
-  fi
+    if [ ! -d $BUILD_DIR/$DIR ]; then
+        cache_copy $DIR $CACHE_DIR $BUILD_DIR
+    fi
 done
+
+# export environment
+env_dir=$1
+acceptlist_regex=${2:-''}
+denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+if [ -d "$env_dir" ]; then
+    for e in $(ls $env_dir); do
+        echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
+            export "$e=$(cat $env_dir/$e)"
+        :
+    done
+fi
 
 BUILD_COMMAND=bin/build
 
