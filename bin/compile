@@ -45,7 +45,6 @@ done
 
 # export environment
 export_env_dir ${ENV_DIR}
-echo $ENVIRONMENT
 
 BUILD_COMMAND=bin/build
 
