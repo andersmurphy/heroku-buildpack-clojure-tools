@@ -70,6 +70,11 @@ if [ "${PIPESTATUS[*]}" != "0 0" ]; then
   exit 1
 fi
 
+# populate profile.d
+PROFILE_PATH="$BUILD_DIR/.profile.d/clojure.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="$HOME/.heroku/clj/bin:$HOME/.jdk/bin:$PATH"' >> $PROFILE_PATH
+
 # rewrite Clojure CLI path
 mv $BUILD_DIR/.heroku/clj/bin/clojure $BUILD_DIR/.heroku/clj/bin/clojure.old
 cat $BUILD_DIR/.heroku/clj/bin/clojure.old | sed -e "s/\/tmp\/$(basename $BUILD_DIR)/\/app/g" > $BUILD_DIR/.heroku/clj/bin/clojure

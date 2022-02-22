@@ -15,5 +15,6 @@ if [ ! -f $BUILD_DIR/Procfile ]; then
 config_vars:
 default_process_types:
 EOF
-    echo "  web: clojure"
+  echo " !     Missing Procfile."
+  exit 1
 fi
