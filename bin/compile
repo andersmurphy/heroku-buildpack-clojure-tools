@@ -91,7 +91,7 @@ done
 CLEAN_COMMAND=bin/clean
 
 # if no clean command exists, we're done
-if [ ! -f $BUILD_DIR/bin/$CLEAN_COMMAND ]; then
+if [ ! -f $BUILD_DIR/$CLEAN_COMMAND ]; then
     # exit 0 because it's fine if we don't have it
     exit 0
 fi
