@@ -85,3 +85,28 @@ mkdir -p $CACHE_DIR
 for DIR in $CACHED_DIRS; do
   cache_copy $DIR $BUILD_DIR $CACHE_DIR
 done
+
+# cleanup files not needed for running, but that might be needed for
+# the build cache.
+CLEAN_COMMAND=bin/clean
+
+# if no clean command exists, we're done
+if [ ! -f $BUILD_DIR/bin/$CLEAN_COMMAND ]; then
+    # exit 0 because it's fine if we don't have it
+    exit 0
+fi
+
+if [ ! -x $BUILD_DIR/$CLEAN_COMMAND ]; then
+    echo " !     Post build clean script bin/clean is not executable"
+    exit 1
+fi
+
+echo "       Running: $CLEAN_COMMAND"
+
+cd $BUILD_DIR
+$CLEAN_COMMAND 2>&1 | sed -u 's/^/       /'
+
+if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+  echo " !     Failed to clean."
+  exit 1
+fi
